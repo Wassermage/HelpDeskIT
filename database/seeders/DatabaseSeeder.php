@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Service;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'system@example.com',
         // ]);
 
+        // Create System User
         User::firstOrCreate(
             ['email' => env('SYSTEM_USER_EMAIL', 'system@example.com')], 
             [
@@ -29,12 +30,13 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt(env('SYSTEM_USER_PASSWORD', 'password'))
             ]);
 
-        Group::firstOrCreate(['name' => 'default']);
+        // Create default Services
+        $this->call(ServiceSeeder::class);
 
-        Service::firstOrCreate(
-            ['name' => 'Microsoft 365'],
-            ['description' => 'Microsoft 365 (O365) Services']
-        );
+        // Create default Support Groups
+        $this->call(GroupSeeder::class);
 
+        // Create default Roles and Permissions
+        $this->call(RolesAndPermissionsSeeder::class);
     }
 }

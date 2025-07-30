@@ -14,8 +14,8 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    <flux:navlist.item icon="clipboard-pen" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('New ticket') }}</flux:navlist.item>
                     <flux:navlist.item icon="clipboard-list" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My requests') }}</flux:navlist.item>
-                    <flux:navlist.item icon="clipboard-pen" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('Create incident') }}</flux:navlist.item>
                 </flux:navlist.group>
                 @auth
                     @if(auth()->user()->groups->contains('id', 1))
