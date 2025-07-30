@@ -14,6 +14,11 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * Always eager load roles and their permissions.
+     */
+    protected $with = ['roles.permissions'];
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
