@@ -17,7 +17,7 @@
                     @auth
                         @canany(['tickets.create.self', 'tickets.create.others'])
                             <flux:navlist.item icon="clipboard-pen" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('New ticket') }}</flux:navlist.item>
-                        @endcan
+                        @endcanany
                         @can('tickets.view.own')
                             <flux:navlist.item icon="clipboard-list" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My requests') }}</flux:navlist.item>
                         @endcan
@@ -37,9 +37,9 @@
 
                     @can('panel.admin')
                         <flux:navlist.group :heading="__('Admin')" class="grid mt-6">
-                            @can('users.update')
+                            @canany(['users.create', 'users.delete', 'users.update'])
                                 <flux:navlist.item icon="users" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('Manage users') }}</flux:navlist.item>
-                            @endcan
+                            @endcanany
                             @can('groups.update')
                                 <flux:navlist.item icon="briefcase-business" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('Manage groups') }}</flux:navlist.item>
                             @endcan

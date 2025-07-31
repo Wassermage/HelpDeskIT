@@ -45,6 +45,11 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'tickets.view.direct', 'label' => 'View tickets assinged to the user'],
             ['name' => 'tickets.view.group', 'label' => 'View tickets assinged to user\'s groups'],
             ['name' => 'tickets.view.all', 'label' => 'View all tickets'],
+            // Users
+            ['name' => 'users.create', 'label' => 'Create users'],
+            ['name' => 'users.delete', 'label' => 'Delete users'],
+            ['name' => 'users.update', 'label' => 'Update users'],
+            ['name' => 'users.view', 'label' => 'View all users'],
         ];
 
         foreach ($permissions as $permData) {
