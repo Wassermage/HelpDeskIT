@@ -14,24 +14,37 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="clipboard-pen" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('New ticket') }}</flux:navlist.item>
-                    <flux:navlist.item icon="clipboard-list" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My requests') }}</flux:navlist.item>
+                    @auth
+                        @canany(['tickets.create.self', 'tickets.create.others'])
+                            <flux:navlist.item icon="clipboard-pen" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('New ticket') }}</flux:navlist.item>
+                        @endcan
+                        @can('tickets.view.own')
+                            <flux:navlist.item icon="clipboard-list" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My requests') }}</flux:navlist.item>
+                        @endcan
+                    @endauth
                 </flux:navlist.group>
                 @auth
-                    @if(auth()->user()->groups->contains('id', 1))
+                    @can('panel.agent')
                         <flux:navlist.group :heading="__('Support team')" class="grid mt-6">
-                            <flux:navlist.item icon="clipboard-list" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My work') }}</flux:navlist.item>
-                            <flux:navlist.item icon="briefcase-business" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My groups work') }}</flux:navlist.item>
+                            @can('tickets.view.direct')
+                                <flux:navlist.item icon="clipboard-list" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My work') }}</flux:navlist.item>
+                            @endcan
+                            @can('tickets.view.group')
+                                <flux:navlist.item icon="briefcase-business" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My groups work') }}</flux:navlist.item>
+                            @endcan
                         </flux:navlist.group>
-                    @endif
-                @endauth
-                @auth
-                    @if(auth()->user()->groups->contains('id', 1))
+                    @endcan
+
+                    @can('panel.admin')
                         <flux:navlist.group :heading="__('Admin')" class="grid mt-6">
-                            <flux:navlist.item icon="users" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('Manage users') }}</flux:navlist.item>
-                            <flux:navlist.item icon="briefcase-business" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('Manage groups') }}</flux:navlist.item>
+                            @can('users.update')
+                                <flux:navlist.item icon="users" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('Manage users') }}</flux:navlist.item>
+                            @endcan
+                            @can('groups.update')
+                                <flux:navlist.item icon="briefcase-business" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('Manage groups') }}</flux:navlist.item>
+                            @endcan
                         </flux:navlist.group>
-                    @endif
+                    @endcan
                 @endauth
             </flux:navlist>
 
