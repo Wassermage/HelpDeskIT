@@ -39,7 +39,7 @@ class Role extends Model
     /**
      * Get the permissions associated with the role.
      *
-     * @return BelongsToMany
+     * @return BelongsToMany<Permission>
      */
     public function permissions(): BelongsToMany
     {
@@ -49,7 +49,7 @@ class Role extends Model
     /**
      * Get users assigned to the role.
      *
-     * @return BelongsToMany
+     * @return BelongsToMany<User>
      */
     public function users(): BelongsToMany
     {
