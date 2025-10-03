@@ -2,8 +2,31 @@
 
 namespace App\Models;
 
+use App\Enums\TicketStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Ticket model for tracking support requests.
+ *
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ *
+ * @property-read int $id
+ * @property string $title
+ * @property string|null $description
+ * @property TicketStatus $status
+ * @property int $requested_by
+ * @property int|null $assigned_to
+ * @property int $service_id
+ * @property int|null $group_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @property-read \App\Models\User $requester
+ * @property-read \App\Models\User|null $assignee
+ * @property-read \App\Models\Service $service
+ * @property-read \App\Models\Group|null $group
+ */
 class Ticket extends Model
 {
     /**
@@ -34,32 +57,40 @@ class Ticket extends Model
 
     /**
      * Get the User who created the ticket.
+     *
+     * @return BelongsTo<User>
      */
-    public function requester()
+    public function requester(): BelongsTo
     {
         return $this->belongsTo(User::class, 'requested_by');
     }
 
     /**
      * Get the User assigned to the ticket.
+     *
+     * @return BelongsTo<User>
      */
-    public function assignee()
+    public function assignee(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
     /**
      * Get the Service assigned to the ticket.
+     *
+     * @return BelongsTo<Service>
      */
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
     }
 
     /**
      * Get the Support Group assigned to the ticket.
+     *
+     * @return BelongsTo<Group>
      */
-    public function group()
+    public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
     }
