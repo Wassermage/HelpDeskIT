@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\TicketCreateForm;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -19,13 +20,14 @@ Route::view('dashboard', 'dashboard')
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
+    /* Settings */
     Route::redirect('settings', 'settings/profile');
-    // Route::redirect('ticket', 'ticket/ticket-form');
-
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
-    // Volt::route('ticket/ticket-form', 'ticket.ticket-form')->name('ticket.ticket-form');
+    /* Tickets */
+    Route::redirect('tickets', 'tickets/create');
+    Volt::route('tickets/create', TicketCreateForm::class)->name('tickets.create');
 });
 
 require __DIR__.'/auth.php';

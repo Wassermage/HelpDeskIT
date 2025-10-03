@@ -16,7 +16,7 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     @auth
                         @canany(['tickets.create.self', 'tickets.create.others'])
-                            <flux:navlist.item icon="clipboard-pen" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('New ticket') }}</flux:navlist.item>
+                            <flux:navlist.item icon="clipboard-pen" :href="route('tickets.create')" :current="request()->routeIs('tickets.create')" wire:navigate>{{ __('New ticket') }}</flux:navlist.item>
                         @endcanany
                         @can('tickets.view.own')
                             <flux:navlist.item icon="clipboard-list" :href="route('dashboard')" :current="request()->routeIs('null')" wire:navigate>{{ __('My requests') }}</flux:navlist.item>
