@@ -4,10 +4,26 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ *
+ * @property-read int $id
+ * @property string $name
+ * @property string $email
+ * @property-read string $initials
+ * @property-read \Illuminate\Support\Carbon $created_at
+ * @property-read \Illuminate\Support\Carbon $updated_at
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Group[] $groups
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @property-read \Illuminate\Support\Collection<int, \App\Models\Permission> $permissions
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -15,9 +31,11 @@ class User extends Authenticatable
 
     /**
      * Always eager load roles and their permissions.
+     *
+     * @var list<string>
      */
     protected $with = ['roles.permissions'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -54,6 +72,8 @@ class User extends Authenticatable
 
     /**
      * Get the user's initials.
+     *
+     * @return string
      */
     public function initials(): string
     {
@@ -66,33 +86,39 @@ class User extends Authenticatable
 
     /**
      * Get the user's support groups.
+     *
+     * @return BelongsToMany<Group>
      */
-    public function groups()
+    public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class)->withTimestamps();
     }
 
     /**
      * Get the user's roles.
+     *
+     * @return BelongsToMany<Role>
      */
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
 
     /**
      * Get the user's permissions.
+     *
+     * @return Collection<int, \App\Models\Permission>
      */
-    public function permissions()
+    public function permissions(): Collection
     {
         return $this->roles->flatMap->permissions->unique('id');
     }
 
     /**
      * Check if user is member of a given role.
-     * 
+     *
      * @param string $roleName
-     * @return bool True if the user has the role , false otherwise.
+     * @return bool True if the user has the role, false otherwise.
      */
     public function hasRole(string $roleName): bool
     {
@@ -101,7 +127,7 @@ class User extends Authenticatable
 
     /**
      * Check if the user has a given permission.
-     * 
+     *
      * @param string $permissionName
      * @return bool True if the user has the permission, false otherwise.
      */
@@ -109,11 +135,13 @@ class User extends Authenticatable
     {
         return $this->permissions()->contains('name', $permissionName);
     }
-    
+
     /**
      * Assign the user to a default role at creation.
+     *
+     * @return void
      */
-    protected static function booted()
+    protected static function booted(): void
     {
         static::created(function ($user) {
             $defaultRole = Role::where('name', 'user')->first();
